@@ -1,0 +1,13 @@
+{
+  "name": "regression-proof-of-concept",
+  "version": "1.10.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "author": "James Duan",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.46.0",
+    "@types/node": "^22.2.0"
+  }
+}
