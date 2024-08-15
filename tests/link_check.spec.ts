@@ -107,105 +107,102 @@ urls.forEach(({pageName, url}) => {
     
         test('Main black navigator menu.', async ({page}) => {
             // Verification of address status is too slow
-            test.setTimeout(120000);
+            test.setTimeout(60000);
 
             // Background
             await expect(page.locator('div.hide-on-med-and-down.nav-bottom-container')).toBeVisible();
     
+            // Primary elements and links
+
+            // How to build urls array
+            // Parse through the main nav bar
+            // Obtain url and associated name (text)
+            const primaryNavItems = [
+                { name: 'Apparel', href: 'https://store.convergint.com/en-gb/catalog/apparel' },
+                { name: 'Colleague Welcome Kit', href: 'https://store.convergint.com/en-gb/catalog/colleague-welcome-kit' },
+                { name: 'Accessories', href: 'https://store.convergint.com/en-gb/catalog/accessories' },
+                { name: 'Office', href: 'https://store.convergint.com/en-gb/catalog/office' },
+                { name: 'Tradeshow', href: 'https://store.convergint.com/en-gb/catalog/tradeshow' },
+                { name: 'Seasonal', href: 'https://store.convergint.com/en-gb/catalog/seasonal' },
+                { name: 'CTC Decor', href: 'https://store.convergint.com/en-gb/catalog/ctc-decor' },
+                { name: 'PPE', href: 'https://store.convergint.com/en-gb/catalog/ppe' },
+                { name: 'Stickers', href: 'https://store.convergint.com/en-gb/catalog/stickers' },
+                { name: 'Sale', href: 'https://store.convergint.com/en-gb/catalog/sale' }
+            ];
+    
+            for(const {name, href} of primaryNavItems) {
+                const link = page.locator('ul#nav-categories').getByRole('link', {name});
+    
+                // Checking visibility
+                await expect(link).toBeVisible();
+                await expect(link).toHaveAttribute('href', href);
+    
+                // Checking HTTP status
+                const res = await page.request.get(href);
+                await expect(res).toBeOK(); 
+            }
     
             // Secondary elements and links: drop down menus
-            const navItems = [
+            const secondaryNavItems = [
                 // Apparel
-                { primaryName: 'Apparel', primaryHref: 'https://store.convergint.com/en-gb/catalog/apparel', dropdownId: 'dropdown1', links: [
+                { dropdownId: 'dropdown1', links: [
                     { name: 'Women', href: 'https://store.convergint.com/en-gb/catalog/apparel/women' },
                     { name: 'Men', href: 'https://store.convergint.com/en-gb/catalog/apparel/men' },
                     { name: 'Youth', href: 'https://store.convergint.com/en-gb/catalog/apparel/youth' }
                 ]},
-                // Colleague Welcome Kit
-                { primaryName: 'Colleague Welcome Kit', primaryHref: 'https://store.convergint.com/en-gb/catalog/colleague-welcome-kit'},
                 // Accessories
-                { primaryName: 'Accessories', primaryHref: 'https://store.convergint.com/en-gb/catalog/accessories', dropdownId: 'dropdown3', links: [
+                { dropdownId: 'dropdown3', links: [
                     { name: 'Golf', href: 'https://store.convergint.com/en-gb/catalog/accessories/golf' },
                     { name: 'Tech', href: 'https://store.convergint.com/en-gb/catalog/accessories/tech' },
                     { name: 'Drinkware', href: 'https://store.convergint.com/en-gb/catalog/accessories/drinkware' },
                     { name: 'Headwear', href: 'https://store.convergint.com/en-gb/catalog/accessories/headwear' },
                     { name: 'Bags', href: 'https://store.convergint.com/en-gb/catalog/accessories/bags' }
                 ]},
-                // Office
-                { primaryName: 'Office', primaryHref: 'https://store.convergint.com/en-gb/catalog/office' },
                 // Tradeshow
-                { primaryName: 'Tradeshow', primaryHref: 'https://store.convergint.com/en-gb/catalog/tradeshow', dropdownId: 'dropdown5', links: [
+                { dropdownId: 'dropdown5', links: [
                     { name: 'Banners', href: 'https://store.convergint.com/en-gb/catalog/tradeshow/banners' },
                     { name: 'Brochures', href: 'https://store.convergint.com/en-gb/catalog/tradeshow/brochures' },
                     { name: 'Career Fair/Giveaways', href: 'https://store.convergint.com/en-gb/catalog/tradeshow/career-fair-giveaways' },
                     { name: 'Displays', href: 'https://store.convergint.com/en-gb/catalog/tradeshow/displays' }
                 ]},
                 // Seasonal
-                { primaryName: 'Seasonal', primaryHref: 'https://store.convergint.com/en-gb/catalog/seasonal', dropdownId: 'dropdown6', links: [
+                { dropdownId: 'dropdown6', links: [
                     { name: 'Spring', href: 'https://store.convergint.com/en-gb/catalog/seasonal/spring' },
                     { name: 'Summer', href: 'https://store.convergint.com/en-gb/catalog/seasonal/summer' },
                     { name: 'Fall', href: 'https://store.convergint.com/en-gb/catalog/seasonal/fall' },
                     { name: 'Winter', href: 'https://store.convergint.com/en-gb/catalog/seasonal/winter' }
                 ]},
                 // Decor
-                { primaryName: 'CTC Decor', primaryHref: 'https://store.convergint.com/en-gb/catalog/ctc-decor', dropdownId: 'dropdown7', links: [
+                { dropdownId: 'dropdown7', links: [
                     { name: 'V&B Posters With Photos', href: 'https://store.convergint.com/en-gb/catalog/ctc-decor/v-and-b-posters-w-photos' },
                     { name: 'V&B Posters Without Photos', href: 'https://store.convergint.com/en-gb/catalog/ctc-decor/v-and-b-posters-wo-photos' },
                     { name: 'Vertical Market Posters Set 1', href: 'https://store.convergint.com/en-gb/catalog/ctc-decor/vertical-market-posters-set-1' },
                     { name: 'Vertical Market Posters Set 2', href: 'https://store.convergint.com/en-gb/catalog/ctc-decor/vertical-market-posters-set-2' }
-                ]},
-                { primaryName: 'PPE', primaryHref: 'https://store.convergint.com/en-gb/catalog/ppe' },
-                { primaryName: 'Stickers', primaryHref: 'https://store.convergint.com/en-gb/catalog/stickers' },
-                { primaryName: 'Sale', primaryHref: 'https://store.convergint.com/en-gb/catalog/sale' }
+                ]}
             ];
     
             // Add physical hover, click, and redirect back
-            for(const item of navItems) {
-                const primaryLink = page.locator('ul#nav-categories').getByRole('link', {name: item.primaryName});
+            for(const {dropdownId, links} of secondaryNavItems) {
+                // Hovering to create dropdown menu
+                const dropdown = page.locator(`ul#${dropdownId}`);
+                await dropdown.locator('..').hover();
+
+                await expect(dropdown).toBeVisible();
     
-                // Checking visibility
-                await expect(primaryLink).toBeVisible();
-                await expect(primaryLink).toHaveAttribute('href', item.primaryHref);
+                for(const {name, href} of links) {
+                    const link = dropdown.locator(`li a:text-is("${name}")`);
+     
+                    // Visibility check
+                    await expect(link).toBeVisible();
+                    await expect(link).toHaveAttribute('href', href);
     
-                // Checking HTTP status
-                const primaryRes = await page.request.get(item.primaryHref);
-                await expect(primaryRes).toBeOK();
-
-                // Manual click check
-                /* await primaryLink.click();
-                await expect(page).toHaveURL(item.primaryHref);
-                await expect(page).toHaveTitle(item.primaryName);
-                await page.goBack(); */
-
-                if(item.links) { 
-                    // Hovering to create dropdown menu
-                    const dropdown = page.locator(`ul#${item.dropdownId}`);
-                    await dropdown.locator('..').hover();
-
-                    await expect(dropdown).toBeVisible();
-                    
-                    for(const {name, href} of item.links) {
-                        const link = dropdown.locator(`li a:text-is("${name}")`);
-        
-                        // Visibility check
-                        await expect(link).toBeVisible();
-                        await expect(link).toHaveAttribute('href', href);
-        
-                        // Checking HTTP response status
-                        const res = await page.request.get(href);
-                        await expect(res).toBeOK();
-                        
-                        // Manual click check
-                        /* await link.click();
-                        await expect(page).toHaveURL(href);
-                        await expect(page).toHaveTitle(name);
-                        await page.goBack(); */
-                    }
+                    // Checking HTTP response status
+                    const res = await page.request.get(href);
+                    await expect(res).toBeOK(); 
                 }
             }
         });
-
-        
+    
         // Homepage only test: Social media links
         if(pageName === 'homepage') {
             test('Social media links', async ({page}) => {
@@ -226,17 +223,11 @@ urls.forEach(({pageName, url}) => {
         
                     // Checking HTTP response status
                     const res = await page.request.get(href);
-                    expect(res.status()).toBe(200);   
-
-                    // Manually clicking links
-                    /* await link.click();
-                    await expect(page).toHaveURL(href);
-                    await expect(page).toHaveTitle(name);
-                    await page.goBack();  */
+                    await expect(res).toBeOK();   
                 }
             });
         }
-
+    
         test('Footer links.', async ({page}) => {
             const navItems = [
                 { headerText: 'Shop', links: [
@@ -272,7 +263,7 @@ urls.forEach(({pageName, url}) => {
                     await expect(link).toBeVisible();
     
                     const res = await page.request.get(href);
-                    expect(res.status()).toBe(200);
+                    await expect(res).toBeOK(); 
                 }
             }
     
@@ -303,8 +294,8 @@ urls.forEach(({pageName, url}) => {
     
             // Checking HTTP response status
             const res = await page.request.get('https://store.convergint.com/en-gb/information/privacy');
-            expect(res.status()).toBe(200);  
-        });
+            await expect(res).toBeOK(); 
+        }); 
     });    
 });
 
